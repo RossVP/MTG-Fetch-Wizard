@@ -2,6 +2,8 @@ const cardName = "Akroan Crusader";
 const cardCode = "lea";
 const cardNum = "161";
 
+
+
 class Card {
   constructor(amount, name, code, number) {
     this.amount = amount;
@@ -14,11 +16,13 @@ class Card {
   async function fetchCards(c, n) {
     
     try {
+        
         const response = await fetch(`https://api.scryfall.com/cards/${c}/${n}`);
         const data = await response.json();
         const img = document.createElement(`img`);
 
         img.src = `https://api.scryfall.com/cards/${c}/${n}/?format=image`;
+        img.alt = JSON.stringify(data.name);
         document.getElementById("pics").appendChild(img);
     }
     catch(error) {
@@ -34,6 +38,9 @@ class Card {
     console.log(lineArr);
     const cardList =[];
     for(let i = 0; i < lineArr.length; i++) {
+      if (lineArr[i] === ""){
+        continue;
+      }
       const newCard = new Card(lineArr[i].substring(0,1), 
                                 lineArr[i].substring(2, lineArr[i].indexOf("(")-1),
                                 lineArr[i].substring(lineArr[i].indexOf("(")+1, lineArr[i].indexOf(")")),
@@ -43,7 +50,7 @@ class Card {
     
     const jsonString = JSON.stringify(cardList);
     localStorage.setItem("cards", jsonString);
-    console.log(jsonString);
+    console.log(jsonString);  
     getDeck();
   }
 
@@ -60,6 +67,21 @@ class Card {
       }
     }
   }
+
+  /*async function fetchCards(c, n) {
+    
+    try {
+        const response = await fetch(`https://api.scryfall.com/cards/${c}/${n}`);
+        const data = await response.json();
+        console.log(data);
+        return data;
+    }
+    catch(error) {
+        console.error("Error fetching cards:", error);
+    }
+    
+  }*/
+
   
 
   
